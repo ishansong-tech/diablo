@@ -19,14 +19,14 @@
 ### 网关种类及定义
 
 
-![](readmeimg/网关种类.png)
+![](readmeimg/gatewayType.png)
 
 + 流量网关由Nginx充当
 + 业务网关是服务层面的，着重点是服务的可靠性
 
 ### 服务网关功能
 
-![](readmeimg/网关功能.png)
+![](readmeimg/functions.png)
 
 1、接口流控
 
@@ -54,21 +54,21 @@
 
 ### 组件图
 
-![](readmeimg/组件图.png)
+![](readmeimg/component.png)
 
 ### 后台用例图
 
-![](readmeimg/后台用例.png)
+![](readmeimg/adminUserCase.png)
 
 ### 请求时序图
 
-![](readmeimg/请求时序图.png)
+![](readmeimg/gatewaySequence.png)
 
 ### 缓存方案
 
 > 采用长轮询方式将后台的配置同步网关进程内，为了访问的高效以及简单，缓存存储采用JVM内存缓存支持。
 
-![](readmeimg/缓存同步.png)
+![](readmeimg/cacheSync.png)
 
 ## 网关协议转换
 
