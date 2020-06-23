@@ -1,6 +1,6 @@
 # 业务网关
 
-![](readmeimg/diablo-logo.png)
+[![diablo-logo.png](https://i.postimg.cc/d32BfxD4/diablo-logo.png)](https://postimg.cc/YLSYG86W)
 
 # 业务网关系列文章
 
