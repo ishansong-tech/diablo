@@ -1,0 +1,38 @@
+server:
+  port: 8899
+
+spring:
+  application:
+    name: diablo
+  main:
+    allow-bean-definition-overriding: true
+
+diablo:
+  sync:
+    strategy: http
+    http:
+      url: http://localhost:8887
+  upstream:
+    keepAlive:
+      scanTime: 30000
+  netty:
+    serverBossThreads: 4
+    serverSelectorThreads: 32
+  failback:
+    delay: 1000
+
+redis:
+  sentinel:
+    master:
+      name: common
+
+apollo:
+  bootstrap:
+    enabled: true
+    namespaces: "application"
+  meta: http://192.168.10.56:8080 
+  cacheDir: ../apollo/cache
+
+logging:
+  level:
+    root: info

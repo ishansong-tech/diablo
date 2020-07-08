@@ -1,0 +1,3 @@
+com.ishansong.diablo.plugin.plugins.divide.balance.RandomLoadBalance
+com.ishansong.diablo.plugin.plugins.divide.balance.RoundRobinLoadBalance
+com.ishansong.diablo.plugin.plugins.divide.balance.HashLoadBalance

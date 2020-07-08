@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- configure.monitorInterval 监控间隔指log4j2每隔7200秒（120分钟），自动监控该配置文件是否有变化，如果变化，则自动根据文件内容重新配置 -->
+<configuration status="off" monitorInterval="3600">
+
+    <!-- traceId 暂时不写，ThreadLocal异常情况无法清除 -->
+
+    <properties>
+        <property name="appName">diablo</property>
+        <property name="logLevel">info</property>
+        <property name="logHome">/mnt/iss/web/diablo-web/nlogs</property>
+        <property name="logRef">default</property>
+
+        <property name="log_pattern">
+            {&quot;date&quot;:&quot;%d{yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS}&quot;,&quot;traceId&quot;:&quot;%threadName&quot;,&quot;sequenceId&quot;:&quot;%sequenceNumber&quot;,&quot;level&quot;:&quot;%p&quot;,&quot;appName&quot;:&quot;${appName}&quot;,&quot;class&quot;:&quot;%C&quot;,&quot;method&quot;:&quot;%M&quot;,&quot;line&quot;:&quot;%L&quot;,&quot;message&quot;:&quot;%enc{%msg %throwable{full}}{JSON}&quot;}%n
+        </property>
+
+        <property name="accessLogPattern">%msg%n</property>
+
+        <!--异步日志，不记录class method line-->
+        <!--<property name="log_patternAsync">{&quot;date&quot;:&quot;%date{yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS}&quot;,&quot;traceId&quot;:&quot;%traceId&quot;,&quot;sequenceId&quot;:&quot;%sequenceId&quot;,&quot;level&quot;:&quot;%level&quot;,&quot;appName&quot;:&quot;${appName}&quot;,&quot;class&quot;:&quot;asyncclass&quot;,&quot;method&quot;:&quot;asyncmethod&quot;,&quot;line&quot;:&quot;0&quot;,&quot;message&quot;:&quot;%replace(%msg){&apos;&quot;&apos;, &apos;`&apos;} %ex&quot;}%n</property>-->
+
+        <!-- 控制台默认输出格式,"%-5level":日志级别,"%l":输出完整的错误位置,是小写的L,因为有行号显示,所以影响日志输出的性能 -->
+        <property name="console_log_pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %l - %m%n</property>
+    </properties>
+
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <!-- 设置控制台只输出level及以上级别的信息(onMatch),其他的直接拒绝(onMismatch)-->
+            <ThresholdFilter level="${logLevel}" onMatch="ACCEPT" onMismatch="DENY"/>
+            <!-- 设置输出格式,不设置默认为:%m%n -->
+            <PatternLayout pattern="${console_log_pattern}"/>
+        </Console>
+
+        <!-- Error console log -->
+        <RollingFile name="default" fileName="${logHome}/default.log" filePattern="${logHome}/default.%d{yyyy-MM-dd}.log" append="true">
+            <!-- 输出格式 -->
+            <PatternLayout pattern="${log_pattern}"/>
+            <!-- 设置策略 -->
+            <Policies>
+                <!-- 基于时间的触发策略。该策略主要是完成周期性的log文件封存工作。有两个参数：
+                    interval，integer型，指定两次封存动作之间的时间间隔。单位:以日志的命名精度来确定单位，
+                        比如yyyy-MM-dd-HH 单位为小时，yyyy-MM-dd-HH-mm 单位为分钟
+                    modulate，boolean型，说明是否对封存时间进行调制。若modulate=true，
+                        则封存时间将以0点为边界进行偏移计算。比如，modulate=true，interval=4hours，
+                        那么假设上次封存日志的时间为03:00，则下次封存日志的时间为04:00，
+                        之后的封存时间依次为08:00，12:00，16:00
+                 -->
+                <TimeBasedTriggeringPolicy interval="1" modulate="false" />
+            </Policies>
+            <Filters>
+                <ThresholdFilter level="${logLevel}" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <!-- 设置同类型日志,同一文件夹下可以存放的数量,如果不设置此属性则默认存放7个文件 -->
+            <DefaultRolloverStrategy max="3">
+                <Delete basePath="${logHome}" maxDepth="1">
+                    <IfFileName glob="*.log" />
+                    <IfLastModified age="3d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="accessLog" fileName="${logHome}/accessLog/accessLog.log" filePattern="${logHome}/accessLog/accessLog.%d{yyyy-MM-dd-HH}-%i.log" append="true">
+            <PatternLayout pattern="${accessLogPattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="false" />
+                <SizeBasedTriggeringPolicy size="300MB" />
+            </Policies>
+            <!--<Filters>
+                <ThresholdFilter level="${logLevel}" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>-->
+            <!-- size策略最大个数 每天最大24*20 -->
+            <DefaultRolloverStrategy max="20">
+                <Delete basePath="${logHome}/accessLog" maxDepth="1">
+                    <IfFileName glob="*.log" />
+                    <IfLastModified age="48H" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="keepAlive" fileName="${logHome}/alarm/keepAlive.log" filePattern="${logHome}/alarm/keepAlive.%d{yyyy-MM-dd}.log" append="true">
+            <PatternLayout pattern="${log_pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="false" />
+            </Policies>
+            <DefaultRolloverStrategy max="3">
+                <Delete basePath="${logHome}/alarm" maxDepth="1">
+                    <IfFileName glob="*.log" />
+                    <IfLastModified age="3d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="requestTrace" fileName="${logHome}/requestTrace/requestTrace.log" filePattern="${logHome}/requestTrace/requestTrace.%d{yyyy-MM-dd}.log" append="true">
+            <PatternLayout pattern="${log_pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="false" />
+            </Policies>
+            <DefaultRolloverStrategy max="3">
+                <Delete basePath="${logHome}/requestTrace" maxDepth="1">
+                    <IfFileName glob="*.log" />
+                    <IfLastModified age="3d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+    </appenders>
+
+    <!--定义logger,只有定义了logger并引入的appender,appender才会生效 additivity是否开启日志级别全部打印，false如果匹配一个日志级别其他不打印-->
+    <!-- 关闭全异步模式，采用异步AsyncLogger和同步logger混搭，错误日志显示类名和行号 -->
+    <loggers>
+        <logger name="default" level="${logLevel}" additivity="false">
+            <appender-ref ref="default"/>
+        </logger>
+
+        <AsyncLogger name="accesslogLogger" level="${logLevel}" additivity="false">
+            <appender-ref ref="accessLog"/>
+        </AsyncLogger>
+
+        <logger name="keepAliveLogger" level="${logLevel}" additivity="false">
+            <appender-ref ref="keepAlive"/>
+        </logger>
+
+        <logger name="requestTraceLogger" level="${logLevel}" additivity="false">
+            <appender-ref ref="requestTrace"/>
+        </logger>
+
+        <logger name="org.springframework" level="${logLevel}" additivity="false">
+            <appender-ref ref="default"/>
+        </logger>
+
+        <logger name="org.apache.http" level="ERROR" additivity="false">
+            <appender-ref ref="default"/>
+        </logger>
+
+        <logger name="org.springframework.web.client" level="ERROR" additivity="false">
+            <appender-ref ref="default"/>
+        </logger>
+
+        <!--建立一个默认的root的logger-->
+        <root level="${logLevel}">
+            <appender-ref ref="default"/>
+            <!--<appender-ref ref="Console"/>-->
+        </root>
+
+    </loggers>
+
+</configuration>
