@@ -14,7 +14,7 @@
 
 基本是参考nginx access log，但只是部分参数有效。这样做的好处是在统一日志分析系统中，运维只需要解析一种类型的请求日志即可，不需要单独做配置。
 
-```
+```java
 
 public class AccessLog implements Serializable {
 
