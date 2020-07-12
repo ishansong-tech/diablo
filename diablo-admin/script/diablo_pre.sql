@@ -1,18 +1,4 @@
 -- ----------------------------
--- Table structure for app_auth
--- ----------------------------
-DROP TABLE IF EXISTS `app_auth`;
-CREATE TABLE `app_auth` (
-  `id` varchar(128)  NOT NULL COMMENT '主键id',
-  `app_key` varchar(32)  NOT NULL COMMENT '应用标识key',
-  `app_secret` varchar(128)  NOT NULL COMMENT '加密算法secret',
-  `enabled` tinyint(4) NOT NULL COMMENT '是否删除',
-  `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
-  `date_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='应用授权表';
-
--- ----------------------------
 -- Table structure for dashboard_user
 -- ----------------------------
 DROP TABLE IF EXISTS `dashboard_user`;
