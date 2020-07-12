@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ishansong.diablo.admin.pre.mapper.RuleConditionMapper">
+    <resultMap id="BaseResultMap" type="com.ishansong.diablo.admin.entity.RuleConditionDO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated"/>
+        <result column="date_updated" jdbcType="TIMESTAMP" property="dateUpdated"/>
+        <result column="rule_id" jdbcType="VARCHAR" property="ruleId"/>
+        <result column="param_type" jdbcType="VARCHAR" property="paramType"/>
+        <result column="operator" jdbcType="VARCHAR" property="operator"/>
+        <result column="param_name" jdbcType="VARCHAR" property="paramName"/>
+        <result column="param_value" jdbcType="VARCHAR" property="paramValue"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, date_created, date_updated, rule_id, param_type,
+        operator, param_name, param_value
+    </sql>
+
+    <select id="findByRuleIds" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rule_condition where rule_id in
+        <foreach collection="ruleIds" item="ruleId" open="(" close=")" separator=",">
+            #{ruleId,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into rule_condition (id, date_created, date_updated, rule_id, param_type, operator, param_name,
+        param_value)
+        values
+        <foreach collection="ruleConditions" item="condition" separator=",">
+            (#{condition.id,jdbcType=VARCHAR}, #{condition.dateCreated,jdbcType=TIMESTAMP},
+            #{condition.dateUpdated,jdbcType=TIMESTAMP},
+            #{condition.ruleId,jdbcType=VARCHAR}, #{condition.paramType,jdbcType=VARCHAR},
+            #{condition.operator,jdbcType=VARCHAR},
+            #{condition.paramName,jdbcType=VARCHAR}, #{condition.paramValue,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from rule_condition
+        where rule_id in
+        <foreach collection="ruleIds" item="ruleId" open="(" close=")" separator=",">
+            #{ruleId,jdbcType=VARCHAR}
+        </foreach>
+    </delete>
+
+</mapper>

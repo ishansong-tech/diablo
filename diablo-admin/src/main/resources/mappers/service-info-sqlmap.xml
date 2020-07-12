@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ishansong.diablo.admin.mapper.ServiceInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.ishansong.diablo.admin.entity.ServiceInfoDO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated"/>
+        <result column="date_updated" jdbcType="TIMESTAMP" property="dateUpdated"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="env" jdbcType="VARCHAR" property="env"/>
+        <result column="port" jdbcType="INTEGER" property="port"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, date_created, date_updated, name,env,port
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from service_info
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from service_info
+        where name = #{name,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByQuery" parameterType="com.ishansong.diablo.admin.query.ServiceInfoQuery" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from service_info where 1=1
+        <if test="name != null">
+            and name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="env != null">
+            and env = #{env,jdbcType=VARCHAR}
+        </if>
+        order by env
+
+        <if test="pageParameter != null">
+            limit #{pageParameter.offset},#{pageParameter.pageSize}
+        </if>
+
+    </select>
+
+    <select id="selectAllMap" resultType="com.ishansong.diablo.admin.entity.ServiceInfoDO">
+        select id, env, name, port
+        from service_info
+        order by env
+    </select>
+
+    <select id="countByQuery" parameterType="com.ishansong.diablo.admin.query.ServiceInfoQuery" resultType="java.lang.Integer">
+        select count(1)
+        from service_info
+        <if test="name != null">
+            where name = #{name,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <select id="selectAll" resultType="com.ishansong.diablo.admin.entity.ServiceInfoDO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from service_info
+        order by env
+    </select>
+
+    <insert id="insert" parameterType="com.ishansong.diablo.admin.entity.ServiceInfoDO">
+        insert into service_info (id, date_created, date_updated,
+        name,env,port)
+        values (#{id,jdbcType=VARCHAR}, #{dateCreated,jdbcType=TIMESTAMP}, #{dateUpdated,jdbcType=TIMESTAMP},
+        #{name,jdbcType=VARCHAR},#{env,jdbcType=VARCHAR}, #{port,jdbcType=INTEGER})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.ishansong.diablo.admin.entity.ServiceInfoDO">
+        insert into service_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="dateCreated != null">
+                date_created,
+            </if>
+            <if test="dateUpdated != null">
+                date_updated,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="env != null">
+                env,
+            </if>
+            <if test="port != null">
+                port,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR},
+            <if test="dateCreated != null">
+                #{dateCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dateUpdated != null">
+                #{dateUpdated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="env != null">
+                #{env,jdbcType=VARCHAR},
+            </if>
+            <if test="port != null">
+                #{port,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.ishansong.diablo.admin.entity.ServiceInfoDO">
+        update service_info
+        set date_updated = #{dateUpdated,jdbcType=TIMESTAMP},
+        name = #{name,jdbcType=VARCHAR},
+        env = #{env,jdbcType=VARCHAR},
+        port = #{port,jdbcType=INTEGER}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateSelective" parameterType="com.ishansong.diablo.admin.entity.ServiceInfoDO">
+        update service_info
+        <set>
+            <if test="dateCreated != null">
+                date_created = #{dateCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dateUpdated != null">
+                date_updated = #{dateUpdated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="port != null">
+                port = #{port,jdbcType=INTEGER},
+            </if>
+            <if test="env != null">env=#{env,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from service_info
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>

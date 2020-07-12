@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ishansong.diablo.admin.mapper.SelectorMapper">
+    <resultMap id="BaseResultMap" type="com.ishansong.diablo.admin.entity.SelectorDO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated"/>
+        <result column="date_updated" jdbcType="TIMESTAMP" property="dateUpdated"/>
+        <result column="plugin_id" jdbcType="VARCHAR" property="pluginId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="match_mode" jdbcType="INTEGER" property="matchMode"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="enabled" jdbcType="TINYINT" property="enabled"/>
+        <result column="loged" jdbcType="TINYINT" property="loged"/>
+        <result column="continued" jdbcType="TINYINT" property="continued"/>
+        <result column="date_published" jdbcType="TIMESTAMP" property="datePublished"/>
+        <result column="date_rollbacked" jdbcType="TIMESTAMP" property="dateRollbacked"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, date_created, date_updated, plugin_id, name, match_mode,
+        type, sort, enabled, loged, continued, date_published, date_rollbacked, handle
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from selector
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findByIds" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from selector
+        where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <select id="selectByQuery" parameterType="com.ishansong.diablo.admin.query.SelectorQuery" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from selector
+        <if test="pluginId != null">
+            where plugin_id = #{pluginId,jdbcType=VARCHAR}
+        </if>
+        order by sort
+        <if test="pageParameter != null">
+            limit #{pageParameter.offset},#{pageParameter.pageSize}
+        </if>
+    </select>
+
+    <select id="findByPluginId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from selector
+        where plugin_id = #{pluginId,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="countByQuery" parameterType="com.ishansong.diablo.admin.query.SelectorQuery" resultType="java.lang.Integer">
+        select count(1)
+        from selector
+        <if test="pluginId != null">
+            where plugin_id = #{pluginId,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="selectAll" resultType="com.ishansong.diablo.admin.entity.SelectorDO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from selector
+        order by sort
+    </select>
+
+    <select id="selectBySelectorIds" parameterType="java.util.List"
+            resultType="com.ishansong.diablo.admin.entity.SelectorPublishDO">
+        select id, date_published, date_rollbacked
+        from selector
+        where id in
+        <foreach collection="selectorIds" item="selectorId" open="(" close=")" separator=",">
+            #{selectorId, jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <insert id="insert" parameterType="com.ishansong.diablo.admin.entity.SelectorDO">
+        insert into selector (id, date_created, date_updated,
+        plugin_id, name, match_mode, type, sort, enabled,
+        loged, continued, date_published, date_rollbacked, handle)
+        values (#{id,jdbcType=VARCHAR}, #{dateCreated,jdbcType=TIMESTAMP}, #{dateUpdated,jdbcType=TIMESTAMP},
+        #{pluginId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{matchMode,jdbcType=INTEGER},
+        #{type,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{enabled,jdbcType=TINYINT},
+        #{loged,jdbcType=TINYINT}, #{continued,jdbcType=TINYINT}, #{datePublished,jdbcType=TIMESTAMP},
+        #{dateRollbacked,jdbcType=TIMESTAMP},
+        #{handle,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.ishansong.diablo.admin.entity.SelectorDO">
+        insert into selector
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="dateCreated != null">
+                date_created,
+            </if>
+            <if test="dateUpdated != null">
+                date_updated,
+            </if>
+            <if test="pluginId != null">
+                plugin_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="matchMode != null">
+                match_mode,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="enabled != null">
+                enabled,
+            </if>
+            <if test="loged != null">
+                loged,
+            </if>
+            <if test="continued != null">
+                continued,
+            </if>
+            <if test="datePublished != null">
+                date_published,
+            </if>
+            <if test="dateRollbacked != null">
+                date_rollbacked,
+            </if>
+            <if test="handle != null">
+                handle,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR},
+            <if test="dateCreated != null">
+                #{dateCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dateUpdated != null">
+                #{dateUpdated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pluginId != null">
+                #{pluginId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="matchMode != null">
+                #{matchMode,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="sort != null">
+                #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="enabled != null">
+                #{enabled,jdbcType=TINYINT},
+            </if>
+            <if test="loged != null">
+                #{loged,jdbcType=TINYINT},
+            </if>
+            <if test="continued != null">
+                #{continued,jdbcType=TINYINT},
+            </if>
+            <if test="datePublished != null">
+                #{datePublished,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dateRollbacked != null">
+                #{dateRollbacked,jdbcType=TIMESTAMP},
+            </if>
+            <if test="handle != null">
+                #{handle,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.ishansong.diablo.admin.entity.SelectorDO">
+        update selector
+        set date_created = #{dateCreated,jdbcType=TIMESTAMP},
+        date_updated = #{dateUpdated,jdbcType=TIMESTAMP},
+        plugin_id = #{pluginId,jdbcType=VARCHAR},
+        name = #{name,jdbcType=VARCHAR},
+        match_mode = #{matchMode,jdbcType=INTEGER},
+        type = #{type,jdbcType=INTEGER},
+        sort = #{sort,jdbcType=INTEGER},
+        enabled = #{enabled,jdbcType=TINYINT},
+        loged = #{loged,jdbcType=TINYINT},
+        continued = #{continued,jdbcType=TINYINT},
+        date_published = #{datePublised,jdbcType=TIMESTAMP},
+        date_rollbacked = #{dateRollbacked,jdbcType=TIMESTAMP},
+        handle = #{handle,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateSelective" parameterType="com.ishansong.diablo.admin.entity.SelectorDO">
+        update selector
+        <set>
+            <if test="dateCreated != null">
+                date_created = #{dateCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dateUpdated != null">
+                date_updated = #{dateUpdated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pluginId != null">
+                plugin_id = #{pluginId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="matchMode != null">
+                match_mode = #{matchMode,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="sort != null">
+                sort = #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled,jdbcType=TINYINT},
+            </if>
+            <if test="loged != null">
+                loged = #{loged,jdbcType=TINYINT},
+            </if>
+            <if test="continued != null">
+                continued = #{continued,jdbcType=TINYINT},
+            </if>
+            <if test="datePublished != null">
+                date_published = #{datePublished,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dateRollbacked != null">
+                date_rollbacked = #{dateRollbacked,jdbcType=TIMESTAMP},
+            </if>
+            <if test="handle != null">
+                handle = #{handle,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from selector
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteByPluginId" parameterType="java.lang.String">
+        delete from selector
+        where plugin_id = #{pluginId,jdbcType=VARCHAR}
+
+    </delete>
+</mapper>

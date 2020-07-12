@@ -1,0 +1,48 @@
+server:
+  port: 8887
+  address: 0.0.0.0
+  session:
+    timeout: 86400
+
+spring:
+  application:
+    name: diablo-admin
+  resources:
+    static-locations: classpath:/static/
+  thymeleaf:
+    cache: true
+    encoding: utf-8
+    enabled: true
+    prefix: classpath:/static/
+    suffix: .html
+  main:
+    allow-bean-definition-overriding: true
+
+diablo:
+  sync:
+    strategy: http
+  adminSyncUpstream:
+    autoSync: false
+    isSendWarnMesseage: false
+
+redis:
+  sentinel:
+    master:
+      name: common
+
+apollo:
+  bootstrap:
+    enabled: true
+    namespaces: application,ISS.MachineConfig,ISS.DBConfig
+  meta: http://192.168.10.56:8080 
+  cacheDir: ../apollo/cache
+env: DS
+
+# pre数据库连接差异 通过apollo.cluster指定  -Dapollo.cluster=pre
+
+logging:
+  level:
+    root: info
+    org.springframework.boot: info
+    org.apache.ibatis: info
+    com.ishansong.diablo.admin: info

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ishansong.diablo.admin.pre.mapper.backup.RuleMapper">
+    <resultMap id="BaseResultMap" type="com.ishansong.diablo.admin.entity.RuleDO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated"/>
+        <result column="date_updated" jdbcType="TIMESTAMP" property="dateUpdated"/>
+        <result column="selector_id" jdbcType="VARCHAR" property="selectorId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="match_mode" jdbcType="INTEGER" property="matchMode"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="enabled" jdbcType="TINYINT" property="enabled"/>
+        <result column="loged" jdbcType="TINYINT" property="loged"/>
+        <result column="handle" jdbcType="VARCHAR" property="handle"/>
+        <result column="upstream_handle" jdbcType="VARCHAR" property="upstreamHandle"/>
+        <result column="date_published" jdbcType="TIMESTAMP" property="datePublished"/>
+        <result column="service_info_id" jdbcType="VARCHAR" property="serviceInfoId"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, date_created, date_updated, selector_id, name, match_mode,
+        sort, enabled, loged, handle, upstream_handle, date_published, service_info_id
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rule_backup
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByQuery" parameterType="com.ishansong.diablo.admin.query.RuleQuery" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rule_backup
+        <if test="selectorId != null">
+            where selector_id = #{selectorId,jdbcType=VARCHAR}
+        </if>
+        <if test="pageParameter != null">
+            limit #{pageParameter.offset},#{pageParameter.pageSize}
+        </if>
+    </select>
+
+    <select id="findBySelectorId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rule_backup where selector_id = #{selectorId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findBySelectorIdAndDatePublished" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rule_backup
+        where selector_id = #{selectorId,jdbcType=VARCHAR} and date_published = #{datePublished,jdbcType=TIMESTAMP}
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into rule_backup (id, date_created, date_updated, selector_id, name, match_mode, sort, enabled, loged,
+        handle, upstream_handle, date_published, service_info_id)
+        values
+        <foreach collection="rules" item="rule" separator=",">
+            (#{rule.id,jdbcType=VARCHAR}, #{rule.dateCreated,jdbcType=TIMESTAMP},
+            #{rule.dateUpdated,jdbcType=TIMESTAMP},
+            #{rule.selectorId,jdbcType=VARCHAR}, #{rule.name,jdbcType=VARCHAR}, #{rule.matchMode,jdbcType=INTEGER},
+            #{rule.sort,jdbcType=INTEGER}, #{rule.enabled,jdbcType=TINYINT}, #{rule.loged,jdbcType=TINYINT},
+            #{rule.handle,jdbcType=VARCHAR}, #{rule.upstreamHandle,jdbcType=VARCHAR},
+            #{rule.datePublished,jdbcType=TIMESTAMP}, #{rule.serviceInfoId,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from rule_backup
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteBySelectorId" parameterType="java.lang.String">
+        delete from rule_backup
+        where selector_id = #{selectorId,jdbcType=VARCHAR}
+    </delete>
+</mapper>

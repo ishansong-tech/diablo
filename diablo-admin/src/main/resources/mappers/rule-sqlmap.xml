@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ishansong.diablo.admin.mapper.RuleMapper">
+    <resultMap id="BaseResultMap" type="com.ishansong.diablo.admin.entity.RuleDO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated"/>
+        <result column="date_updated" jdbcType="TIMESTAMP" property="dateUpdated"/>
+        <result column="selector_id" jdbcType="VARCHAR" property="selectorId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="match_mode" jdbcType="INTEGER" property="matchMode"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="enabled" jdbcType="TINYINT" property="enabled"/>
+        <result column="loged" jdbcType="TINYINT" property="loged"/>
+        <result column="handle" jdbcType="VARCHAR" property="handle"/>
+        <result column="upstream_handle" jdbcType="VARCHAR" property="upstreamHandle"/>
+        <result column="service_info_id" jdbcType="VARCHAR" property="serviceInfoId"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, date_created, date_updated, selector_id, name, match_mode,
+        sort, enabled, loged, handle, upstream_handle, service_info_id
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rule
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByQuery" parameterType="com.ishansong.diablo.admin.query.RuleQuery" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rule
+        <if test="selectorId != null">
+            where selector_id = #{selectorId,jdbcType=VARCHAR}
+        </if>
+        order by sort
+        <if test="pageParameter != null">
+            limit #{pageParameter.offset},#{pageParameter.pageSize}
+        </if>
+    </select>
+
+    <select id="findBySelectorId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rule where selector_id = #{selectorId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="countByQuery" parameterType="com.ishansong.diablo.admin.query.RuleQuery" resultType="java.lang.Integer">
+        select count(1)
+        from rule
+        <if test="selectorId != null">
+            where selector_id = #{selectorId,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="selectAll" resultType="com.ishansong.diablo.admin.entity.RuleDO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rule
+        order by sort
+    </select>
+
+    <select id="selectByServiceId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rule where service_info_id = #{serviceInfoId,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insert" parameterType="com.ishansong.diablo.admin.entity.RuleDO">
+        insert into rule (id, date_created, date_updated,
+        selector_id, name, match_mode, sort, enabled,
+        loged, handle, upstream_handle, service_info_id)
+        values (#{id,jdbcType=VARCHAR}, #{dateCreated,jdbcType=TIMESTAMP}, #{dateUpdated,jdbcType=TIMESTAMP},
+        #{selectorId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{matchMode,jdbcType=INTEGER},
+        #{sort,jdbcType=INTEGER}, #{enabled,jdbcType=TINYINT}, #{loged,jdbcType=TINYINT},
+        #{handle,jdbcType=VARCHAR}, #{upstreamHandle,jdbcType=VARCHAR}, #{serviceInfoId,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.ishansong.diablo.admin.entity.RuleDO">
+        insert into rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="dateCreated != null">
+                date_created,
+            </if>
+            <if test="dateUpdated != null">
+                date_updated,
+            </if>
+            <if test="selectorId != null">
+                selector_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="matchMode != null">
+                match_mode,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="enabled != null">
+                enabled,
+            </if>
+            <if test="loged != null">
+                loged,
+            </if>
+            <if test="handle != null">
+                handle,
+            </if>
+            <if test="upstreamHandle != null">
+                upstream_handle,
+            </if>
+            <if test="serviceInfoId != null">
+                service_info_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR},
+            <if test="dateCreated != null">
+                #{dateCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dateUpdated != null">
+                #{dateUpdated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="selectorId != null">
+                #{selectorId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="matchMode != null">
+                #{matchMode,jdbcType=INTEGER},
+            </if>
+            <if test="sort != null">
+                #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="enabled != null">
+                #{enabled,jdbcType=TINYINT},
+            </if>
+            <if test="loged != null">
+                #{loged,jdbcType=TINYINT},
+            </if>
+            <if test="handle != null">
+                #{handle,jdbcType=VARCHAR},
+            </if>
+            <if test="upstreamHandle != null">
+                #{upstreamHandle,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceInfoId != null">
+                #{serviceInfoId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into rule (id, date_created, date_updated, selector_id, name, match_mode, sort, enabled, loged, handle,
+        upstream_handle, serviceInfoId)
+        values
+        <foreach collection="rules" item="rule" separator=",">
+            (#{rule.id,jdbcType=VARCHAR}, #{rule.dateCreated,jdbcType=TIMESTAMP},
+            #{rule.dateUpdated,jdbcType=TIMESTAMP},
+            #{rule.selectorId,jdbcType=VARCHAR}, #{rule.name,jdbcType=VARCHAR}, #{rule.matchMode,jdbcType=INTEGER},
+            #{rule.sort,jdbcType=INTEGER}, #{rule.enabled,jdbcType=TINYINT}, #{rule.loged,jdbcType=TINYINT},
+            #{rule.handle,jdbcType=VARCHAR}),#{rule.upstreamHandle,jdbcType=VARCHAR}, #{rule.serviceInfoId,jdbcType=VARCHAR}
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.ishansong.diablo.admin.entity.RuleDO">
+        update rule
+        set date_created = #{dateCreated,jdbcType=TIMESTAMP},
+        date_updated = #{dateUpdated,jdbcType=TIMESTAMP},
+        selector_id = #{selectorId,jdbcType=VARCHAR},
+        name = #{name,jdbcType=VARCHAR},
+        match_mode = #{matchMode,jdbcType=INTEGER},
+        sort = #{sort,jdbcType=INTEGER},
+        enabled = #{enabled,jdbcType=TINYINT},
+        loged = #{loged,jdbcType=TINYINT},
+        handle = #{handle,jdbcType=VARCHAR},
+        upstream_handle = #{upstreamHandle,jdbcType=VARCHAR},
+        service_info_id = #{serviceInfoId,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateSelective" parameterType="com.ishansong.diablo.admin.entity.RuleDO">
+        update rule
+        <set>
+            <if test="dateCreated != null">
+                date_created = #{dateCreated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dateUpdated != null">
+                date_updated = #{dateUpdated,jdbcType=TIMESTAMP},
+            </if>
+            <if test="selectorId != null">
+                selector_id = #{selectorId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="matchMode != null">
+                match_mode = #{matchMode,jdbcType=INTEGER},
+            </if>
+            <if test="sort != null">
+                sort = #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled,jdbcType=TINYINT},
+            </if>
+            <if test="loged != null">
+                loged = #{loged,jdbcType=TINYINT},
+            </if>
+            <if test="handle != null">
+                handle = #{handle,jdbcType=VARCHAR},
+            </if>
+            <if test="upstreamHandle != null">
+                upstream_handle = #{upstreamHandle,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceInfoId != null">
+                service_info_id = #{serviceInfoId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateByServiceInfoId">
+        update rule
+        set upstream_handle=#{upstreamHandle,jdbcType=VARCHAR}
+        where service_info_id = #{serviceInfoId,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from rule
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteBySelectorId" parameterType="java.lang.String">
+        delete from rule
+        where selector_id = #{selectorId,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ishansong.diablo.admin.pre.mapper.backup.SelectorConditionMapper">
+    <resultMap id="BaseResultMap" type="com.ishansong.diablo.admin.entity.SelectorConditionDO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated"/>
+        <result column="date_updated" jdbcType="TIMESTAMP" property="dateUpdated"/>
+        <result column="selector_id" jdbcType="VARCHAR" property="selectorId"/>
+        <result column="param_type" jdbcType="VARCHAR" property="paramType"/>
+        <result column="operator" jdbcType="VARCHAR" property="operator"/>
+        <result column="param_name" jdbcType="VARCHAR" property="paramName"/>
+        <result column="param_value" jdbcType="VARCHAR" property="paramValue"/>
+        <result column="date_published" jdbcType="TIMESTAMP" property="datePublished"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, date_created, date_updated, selector_id, param_type,
+        operator, param_name, param_value, date_published
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from selector_condition_backup
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByQuery" parameterType="com.ishansong.diablo.admin.query.SelectorConditionQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from selector_condition_backup
+        <if test="selectorId != null">
+            where selector_id = #{selectorId,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="selectBySelectorId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from selector_condition_backup
+        where selector_id = #{selectorId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectBySelectorIdAndDatePublished" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from selector_condition_backup
+        where selector_id = #{selectorId,jdbcType=VARCHAR} and date_published = #{datePublished,jdbcType=TIMESTAMP}
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into selector_condition_backup (id, date_created, date_updated, selector_id, param_type, operator,
+        param_name, param_value, date_published)
+        values
+        <foreach collection="selectorConditions" item="condition" separator=",">
+            (#{condition.id,jdbcType=VARCHAR}, #{condition.dateCreated,jdbcType=TIMESTAMP},
+            #{condition.dateUpdated,jdbcType=TIMESTAMP},
+            #{condition.selectorId,jdbcType=VARCHAR}, #{condition.paramType,jdbcType=VARCHAR},
+            #{condition.operator,jdbcType=VARCHAR},
+            #{condition.paramName,jdbcType=VARCHAR}, #{condition.paramValue,jdbcType=VARCHAR},
+            #{condition.datePublished,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from selector_condition_backup
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteBySelectorId" parameterType="java.lang.String">
+        delete from selector_condition_backup
+        where selector_id = #{selectorId,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>

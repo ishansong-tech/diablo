@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ishansong.diablo.admin.pre.mapper.ServiceInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.ishansong.diablo.admin.entity.ServiceInfoDO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated"/>
+        <result column="date_updated" jdbcType="TIMESTAMP" property="dateUpdated"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="env" jdbcType="VARCHAR" property="env"/>
+        <result column="port" jdbcType="INTEGER" property="port"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, date_created, date_updated, name,env,port
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from service_info
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

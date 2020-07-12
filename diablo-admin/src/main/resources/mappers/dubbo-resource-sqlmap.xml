@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ishansong.diablo.admin.mapper.DubboResourceMapper">
+    <resultMap id="BaseResultMap" type="com.ishansong.diablo.admin.entity.DubboResourceDO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="resource_key" jdbcType="VARCHAR" property="key"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="service_name" jdbcType="VARCHAR" property="serviceName"/>
+        <result column="namespace" jdbcType="VARCHAR" property="namespace"/>
+        <result column="method" jdbcType="VARCHAR" property="method"/>
+        <result column="param_metas" jdbcType="VARCHAR" property="paramMetas"/>
+        <result column="ext_config" jdbcType="VARCHAR" property="extConfig"/>
+        <result column="api_config" jdbcType="VARCHAR" property="apiConfig"/>
+        <result column="object_type" jdbcType="TINYINT" property="objectType"/>
+        <result column="param_source_type" jdbcType="TINYINT" property="paramSourceType"/>
+        <result column="http_request_type" jdbcType="TINYINT" property="httpRequestType"/>
+        <result column="enabled" jdbcType="TINYINT" property="enabled"/>
+        <result column="owner" jdbcType="VARCHAR" property="owner"/>
+        <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated"/>
+        <result column="date_updated" jdbcType="TIMESTAMP" property="dateUpdated"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, resource_key, name, service_name, namespace, method, param_metas, ext_config, api_config, object_type,
+        param_source_type,
+        http_request_type, enabled, owner, date_created, date_updated
+    </sql>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from dubbo_resource
+        order by service_name, namespace
+    </select>
+
+    <!--查询需要带上 serviceName-->
+    <select id="selectByPage" parameterType="com.ishansong.diablo.admin.query.DubboResourceQuery" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from dubbo_resource
+        where service_name = #{serviceName, jdbcType=VARCHAR}
+        <if test="namespace != null and namespace != ''">
+            and namespace like concat('%', #{namespace, jdbcType=VARCHAR}, '%')
+        </if>
+        order by service_name, namespace
+        <if test="pageParameter != null">
+            limit #{pageParameter.pageSize} offset #{pageParameter.offset}
+        </if>
+    </select>
+
+    <select id="countByQuery" parameterType="com.ishansong.diablo.admin.query.DubboResourceQuery"
+            resultType="java.lang.Integer">
+        select
+        count(1)
+        from dubbo_resource
+        where service_name = #{serviceName, jdbcType=VARCHAR}
+        <if test="namespace != null and namespace != ''">
+            and namespace like concat('%', #{namespace, jdbcType=VARCHAR}, '%')
+        </if>
+    </select>
+
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from dubbo_resource
+        where id = #{id, jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.ishansong.diablo.admin.entity.DubboResourceDO">
+        insert into dubbo_resource
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id, resource_key, name, service_name, namespace, method, param_metas, ext_config, api_config, object_type,
+            param_source_type, http_request_type, enabled, owner,
+            <if test="dateCreated != null">
+                date_created,
+            </if>
+            <if test="dateUpdated != null">
+                date_updated,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id, jdbcType=VARCHAR}, #{key, jdbcType=VARCHAR}, #{name, jdbcType=VARCHAR},
+            #{serviceName, jdbcType=VARCHAR},
+            #{namespace, jdbcType=VARCHAR}, #{method, jdbcType=VARCHAR}, #{paramMetas, jdbcType=VARCHAR},
+            #{extConfig, jdbcType=VARCHAR}, #{apiConfig, jdbcType=VARCHAR},
+            #{objectType, jdbcType=TINYINT}, #{paramSourceType, jdbcType=TINYINT}, #{httpRequestType, jdbcType=TINYINT},
+            #{enabled, jdbcType=TINYINT}, #{owner, jdbcType=VARCHAR},
+            <if test="dateCreated != null">
+                #{dateCreated, jdbcType=TIMESTAMP},
+            </if>
+            <if test="dateUpdated != null">
+                #{dateUpdated, jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateSelective" parameterType="com.ishansong.diablo.admin.entity.DubboResourceDO">
+        update dubbo_resource
+        <set>
+            resource_key =#{key, jdbcType=VARCHAR}, name = #{name, jdbcType=VARCHAR},
+            service_name = #{serviceName, jdbcType=VARCHAR},
+            namespace = #{namespace, jdbcType=VARCHAR}, method= #{method, jdbcType=VARCHAR},
+            param_metas = #{paramMetas, jdbcType=VARCHAR},
+            ext_config = #{extConfig, jdbcType=VARCHAR}, api_config = #{apiConfig, jdbcType=VARCHAR},
+            object_type = #{objectType, jdbcType=TINYINT}, param_source_type = #{paramSourceType, jdbcType=TINYINT},
+            http_request_type = #{httpRequestType, jdbcType=TINYINT},
+            enabled = #{enabled, jdbcType=TINYINT}, owner = #{owner, jdbcType=VARCHAR},
+            <if test="dateCreated != null">
+                date_created = #{dateCreated, jdbcType=TIMESTAMP},
+            </if>
+            <if test="dateUpdated != null">
+                date_updated = #{dateUpdated, jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id, jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from dubbo_resource
+        where id = #{id, jdbcType=VARCHAR}
+    </delete>
+
+</mapper>
