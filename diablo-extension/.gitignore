@@ -72,20 +72,10 @@ atlassian-ide-plugin.xml
 # NetBeans specific files/directories
 .nbattrs
 *.orig
-service-location/service-location/*
-service-base/service-base/*
-service-coupon/service-coupon/*
-service-courier/service-courier/*
-service-demo/service-demo/*
-service-sms/service-sms/*
-service-user/service-user/*
-
 
 Demo*.java
 #dev.properties
-courier-service.properties*
 etc/
 /config
 /disconf
 /apollo
-/courier-service/config
