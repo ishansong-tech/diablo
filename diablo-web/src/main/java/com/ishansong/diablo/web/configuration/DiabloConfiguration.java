@@ -6,6 +6,7 @@ import com.alicp.jetcache.anno.CreateCache;
 import com.alicp.jetcache.anno.SerialPolicy;
 import com.ishansong.diablo.cache.LocalCacheManager;
 import com.ishansong.diablo.cache.UpstreamCacheManager;
+import com.ishansong.diablo.plugin.limiter.LimiterPlugin;
 import com.ishansong.diablo.plugin.plugins.DiabloPlugin;
 import com.ishansong.diablo.plugin.plugins.divide.DividePlugin;
 import com.ishansong.diablo.plugin.plugins.dubbo.DubboPlugin;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Configuration
-@Import(value = {CacheConfiguration.class})
+@Import(value = {CacheConfiguration.class,GatewayConfiguration.class})
 public class DiabloConfiguration {
 
     private final LocalCacheManager localCacheManager;
@@ -89,6 +90,11 @@ public class DiabloConfiguration {
     @Bean
     public DiabloPlugin breakerPlugin() {
         return new MonitorPlugin(localCacheManager);
+    }
+
+    @Bean
+    public DiabloPlugin limiterPlugin() {
+        return new LimiterPlugin(localCacheManager);
     }
 
     @Bean

@@ -1,8 +1,10 @@
 package com.ishansong.diablo.plugin.plugins.monitor;
 
+import com.alibaba.csp.sentinel.adapter.gateway.common.param.GatewayParamParser;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.ishansong.diablo.cache.LocalCacheManager;
+import com.ishansong.diablo.extension.sentinel.adapter.ServerWebExchangeItemParser;
 import com.ishansong.diablo.plugin.cat.reactor.CatConfig;
 import com.ishansong.diablo.plugin.cat.reactor.CatReactorTransformer;
 import com.ishansong.diablo.core.constant.Constants;
@@ -28,8 +30,8 @@ import java.util.Optional;
 
 public class MonitorPlugin extends AbstractDiabloPlugin {
 
-    private final ParamParser<ServerWebExchange> paramParser = new ParamParser<>(
-            new ServerWebExchangeItemParser());
+    private final GatewayParamParser<ServerWebExchange> paramParser = new GatewayParamParser<ServerWebExchange>(new ServerWebExchangeItemParser());
+
 
     private static final Logger logger = LoggerFactory.getLogger(MonitorPlugin.class);
 
@@ -51,7 +53,8 @@ public class MonitorPlugin extends AbstractDiabloPlugin {
             return null;
         }
 
-        return paramParser.parseParameterForAccessLog(exchange, requestDTO);
+        //return paramParser.parseParameterForAccessLog(exchange, requestDTO); todo
+        return new AccessLog();
     }
 
     @Override

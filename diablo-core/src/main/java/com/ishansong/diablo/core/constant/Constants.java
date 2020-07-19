@@ -84,5 +84,8 @@ public interface Constants {
     String GATEWAY_CONTEXT_API_NAME = GATEWAY_CONTEXT_PREFIX + "apiName";
     String GATEWAY_ALREADY_ROUTED_ATTR = "gateway_Already_Routed";
 
+    int RESOURCE_MODE_ROUTE_ID = 0;
+    int RESOURCE_MODE_CUSTOM_API_NAME = 1;
+
 }
 

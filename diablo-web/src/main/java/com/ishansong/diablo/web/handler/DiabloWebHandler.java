@@ -46,7 +46,7 @@ public final class DiabloWebHandler implements WebHandler {
 
         try {
             // 预设加载10s
-            Thread.sleep(10000);
+            Thread.sleep(1000);
 
             started = true;
         } catch (InterruptedException e) {

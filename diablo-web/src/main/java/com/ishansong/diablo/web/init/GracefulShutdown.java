@@ -45,19 +45,19 @@ public class GracefulShutdown {
 
                 log.info("GracefulShutdown loopResources dispose block to 45s before real shutdown start");
 
-                HttpResources.disposeLoopsAndConnectionsLater().block(Duration.ofSeconds(10));
+                HttpResources.disposeLoopsAndConnectionsLater().block(Duration.ofSeconds(1));
 
                 if (connectionProvider != null) {
-                    connectionProvider.disposeLater().block(Duration.ofSeconds(10));
+                    connectionProvider.disposeLater().block(Duration.ofSeconds(1));
                 }
                 try {
-                    loopResources.disposeLater().block(Duration.ofSeconds(10));
+                    loopResources.disposeLater().block(Duration.ofSeconds(1));
                 } catch (Exception e) {
                     log.info("GracefulShutdown loopResources dispose block failed, cause:{}", Throwables.getStackTraceAsString(e));
                 }
 
                 try {
-                    Thread.sleep(45_000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     // ingore
                 }
