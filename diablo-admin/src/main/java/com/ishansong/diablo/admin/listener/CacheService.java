@@ -91,10 +91,6 @@ public class CacheService {
 
     private void updateCache(String group, String data) {
         try {
-            if(true){
-                return;
-
-            }
 
             ConfigDataCache configDataCache = this.getConfigDataCacheService().get(group);
 
