@@ -6,6 +6,7 @@ import com.alicp.jetcache.anno.CreateCache;
 import com.alicp.jetcache.anno.SerialPolicy;
 import com.ishansong.diablo.cache.LocalCacheManager;
 import com.ishansong.diablo.cache.UpstreamCacheManager;
+import com.ishansong.diablo.config.DiabloConfig;
 import com.ishansong.diablo.plugin.limiter.LimiterPlugin;
 import com.ishansong.diablo.plugin.plugins.DiabloPlugin;
 import com.ishansong.diablo.plugin.plugins.divide.DividePlugin;
@@ -50,10 +51,14 @@ public class DiabloConfiguration {
 
     private final UpstreamCacheManager upstreamCacheManager;
 
+    private final DiabloConfig diabloConfig;
+
     public DiabloConfiguration(final LocalCacheManager localCacheManager,
-                               final UpstreamCacheManager upstreamCacheManager) {
+                               final UpstreamCacheManager upstreamCacheManager,
+                               final DiabloConfig diabloConfig) {
         this.localCacheManager = localCacheManager;
         this.upstreamCacheManager = upstreamCacheManager;
+        this.diabloConfig=diabloConfig;
     }
 
     private static final int DEFAULT_LOW_WATER_MARK = 32 * 1024;
@@ -89,7 +94,7 @@ public class DiabloConfiguration {
 
     @Bean
     public DiabloPlugin breakerPlugin() {
-        return new MonitorPlugin(localCacheManager);
+        return new MonitorPlugin(localCacheManager,diabloConfig);
     }
 
     @Bean

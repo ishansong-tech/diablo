@@ -5,10 +5,10 @@ import com.google.common.base.Strings;
 import com.ishansong.diablo.admin.listener.CacheService;
 import com.ishansong.diablo.admin.utils.PreEnv;
 import com.ishansong.diablo.admin.utils.ProdEnv;
+import com.ishansong.diablo.config.DiabloConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -22,11 +22,16 @@ public class InitApplicationRunner implements ApplicationRunner {
 
     private final CacheService cacheService;
 
+    private final DiabloConfig diabloConfig;
+
     @Autowired
-    public InitApplicationRunner(@Value("${apollo.cluster:}") String apolloCluster,
-                                 @Value("${env:}") String env,
-                                 CacheService cacheService) {
+    public InitApplicationRunner(
+                                 CacheService cacheService,
+                                 DiabloConfig diabloConfig) {
         this.cacheService = cacheService;
+        this.diabloConfig=diabloConfig;
+        String apolloCluster=this.diabloConfig.getAdmin().getApollo().getCluster();
+        String env=this.diabloConfig.getAdmin().getEnv();
 
         PreEnv.setPre(!Strings.isNullOrEmpty(apolloCluster));
         ProdEnv.setProd(!Strings.isNullOrEmpty(env) && Objects.equal("pro",env.toLowerCase()));

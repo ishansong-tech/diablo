@@ -4,6 +4,7 @@ import com.alibaba.csp.sentinel.adapter.gateway.common.param.GatewayParamParser;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.ishansong.diablo.cache.LocalCacheManager;
+import com.ishansong.diablo.config.DiabloConfig;
 import com.ishansong.diablo.extension.sentinel.adapter.ServerWebExchangeItemParser;
 import com.ishansong.diablo.plugin.cat.reactor.CatConfig;
 import com.ishansong.diablo.plugin.cat.reactor.CatReactorTransformer;
@@ -32,19 +33,20 @@ public class MonitorPlugin extends AbstractDiabloPlugin {
 
     private final GatewayParamParser<ServerWebExchange> paramParser = new GatewayParamParser<ServerWebExchange>(new ServerWebExchangeItemParser());
 
-
     private static final Logger logger = LoggerFactory.getLogger(MonitorPlugin.class);
 
     private final String hostNameSeparator = ".";
 
-    @Value("${diablo.accessLog.enable:true}")
     private Boolean accessLogEnable;
 
-    @Value("${diablo.accessLog.percentagy:100}")
     private Long accessLogPercentagy;
 
-    public MonitorPlugin(LocalCacheManager localCacheManager) {
+    private DiabloConfig diabloConfig;
+
+    public MonitorPlugin(LocalCacheManager localCacheManager, DiabloConfig diabloConfig) {
         super(localCacheManager);
+        this.accessLogEnable=diabloConfig.getWeb().getAccessLog().isEnable();
+        this.accessLogPercentagy=diabloConfig.getWeb().getAccessLog().getPercentagy();
     }
 
     private AccessLog buildAccessLog(final ServerWebExchange exchange) {

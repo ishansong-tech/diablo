@@ -6,6 +6,7 @@ import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.ishansong.diablo.config.DiabloConfig;
 import com.ishansong.diablo.core.concurrent.DiabloThreadFactory;
 import com.ishansong.diablo.core.constant.Constants;
 import com.ishansong.diablo.core.model.rule.DivideHealthDto;
@@ -18,6 +19,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -50,8 +52,10 @@ public class UpstreamCacheManager {
         UPSTREAM_MAP.remove(key);
     }
 
-    @Value("${diablo.upstream.keepAlive.scanTime:1000}")
     private Long upstreamKeepAliveScanTime;
+
+    @Autowired
+    private DiabloConfig diabloConfig;
 
     private static Boolean defaultHealthStatus = true;
 
@@ -60,6 +64,7 @@ public class UpstreamCacheManager {
     @PostConstruct
     public void init() {
 
+        upstreamKeepAliveScanTime=this.diabloConfig.getWeb().getKeepAliveUpstream().getScanTimeMillisecond();
         new ScheduledThreadPoolExecutor(1, DiabloThreadFactory.create("scheduled-upstream-task", false))
                 .scheduleWithFixedDelay(this::scheduled, upstreamKeepAliveScanTime, upstreamKeepAliveScanTime, TimeUnit.MILLISECONDS);
     }

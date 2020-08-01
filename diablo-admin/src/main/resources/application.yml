@@ -24,11 +24,20 @@ diablo:
   adminSyncUpstream:
     autoSync: false
     isSendWarnMesseage: false
-
-redis:
-  sentinel:
-    master:
-      name: common
+  admin:
+    syncUpstream:
+      autoSync: true
+      sendWarnMessage: true
+    apollo:
+      cluster: pre
+    env: DS
+    domain: http://127.0.0.1:8887
+    zookeeper:
+      host: 192.168.1.1:2181
+    redis:
+      master: common
+      nodes: 192.168.1.10:26379
+      pwd: 123
 
 apollo:
   bootstrap:

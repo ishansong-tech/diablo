@@ -6,9 +6,7 @@ import com.ishansong.diablo.core.enums.RpcTypeEnum;
 import com.ishansong.diablo.core.model.DiabloResult;
 import com.ishansong.diablo.core.model.request.RequestDTO;
 import com.ishansong.diablo.core.utils.GsonUtils;
-import com.ishansong.diablo.web.init.ApolloConfigBusiness;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -23,16 +21,13 @@ import java.util.Objects;
 @Slf4j
 public class ParamWebFilter extends AbstractWebFilter {
 
-    @Autowired
-    private ApolloConfigBusiness apolloConfigBusiness;
-
     @Override
     protected Mono<Boolean> doFilter(final ServerWebExchange exchange, final WebFilterChain chain) {
         final ServerHttpRequest request = exchange.getRequest();
         final RequestDTO requestDTO = RequestDTO.transform(request);
         if (verify(requestDTO, exchange)) {
             exchange.getAttributes().put(Constants.REQUESTDTO, requestDTO);
-            exchange.getAttributes().put(Constants.DUBBO_TOKEN_RPC_TIMEOUT, apolloConfigBusiness.getTokenDubboTimeout());
+            exchange.getAttributes().put(Constants.DUBBO_TOKEN_RPC_TIMEOUT, 1000);
         } else {
             return Mono.just(false);
         }

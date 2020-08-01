@@ -1,6 +1,8 @@
 package com.ishansong.diablo.admin.listener;
 
+import com.ishansong.diablo.config.DiabloConfig;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.context.ApplicationListener;
@@ -14,7 +16,10 @@ public class ApplicationStartListener implements ApplicationListener<WebServerIn
 
     private String diabloHttpPath;
 
-    public ApplicationStartListener(@Value("${diablo.httpPath:}") String diabloHttpPath) {
+    @Autowired
+    public ApplicationStartListener(DiabloConfig diabloConfig) {
+
+        String diabloHttpPath=diabloConfig.getAdmin().getDomain();
         this.diabloHttpPath = diabloHttpPath;
     }
 

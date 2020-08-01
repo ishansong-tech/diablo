@@ -30,8 +30,7 @@ public class LimiterPlugin extends AbstractDiabloPlugin {
 
     private final GatewayParamParser<ServerWebExchange> paramParser = new GatewayParamParser<ServerWebExchange>(new ServerWebExchangeItemParser());
 
-    @Value("${diablo.sentinel.enable:false}")
-    private Boolean sentinelEnable;
+    private Boolean sentinelEnable=false;
 
     public LimiterPlugin(LocalCacheManager localCacheManager) {
         super(localCacheManager);

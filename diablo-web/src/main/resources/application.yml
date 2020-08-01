@@ -20,11 +20,19 @@ diablo:
     serverSelectorThreads: 32
   failback:
     delay: 1000
-
-redis:
-  sentinel:
-    master:
-      name: common
+  web:
+    keepAliveUpstream:
+      scanTimeMillisecond: 1000
+    disruptor:
+      bufferSize: 2048
+      threadSize: 1
+    accessLog:
+      enable: true
+      percentagy: 100
+    redis:
+      master: common
+      nodes: 192.168.1.10:26379
+      pwd: 123
 
 apollo:
   bootstrap:

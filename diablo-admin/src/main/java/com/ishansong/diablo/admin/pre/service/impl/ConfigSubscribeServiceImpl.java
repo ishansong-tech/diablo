@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.ishansong.diablo.admin.listener.DataChangedEvent;
 import com.ishansong.diablo.admin.pre.service.ConfigSubscribeService;
+import com.ishansong.diablo.config.DiabloConfig;
 import com.ishansong.diablo.core.concurrent.DiabloThreadFactory;
 import com.ishansong.diablo.core.constant.AdminConstants;
 import com.ishansong.diablo.core.enums.ConfigGroupEnum;
@@ -42,9 +43,11 @@ public class ConfigSubscribeServiceImpl implements ConfigSubscribeService {
     @Autowired(required = false)
     private ApplicationEventPublisher eventPublisher;
 
-    public ConfigSubscribeServiceImpl(@Value("${zookeeper.host:}") String zookeeperHost) {
+    @Autowired
+    public ConfigSubscribeServiceImpl(DiabloConfig diabloConfig) {
 
         try {
+            String zookeeperHost=diabloConfig.getAdmin().getZookeeper().getHost();
             CuratorFrameworkFactory.Builder builder = CuratorFrameworkFactory.builder()
                                                                              .connectString(zookeeperHost)
                                                                              .retryPolicy(new RetryNTimes(1, 1000))

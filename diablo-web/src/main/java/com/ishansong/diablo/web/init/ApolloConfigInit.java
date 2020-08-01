@@ -22,9 +22,9 @@ public class ApolloConfigInit {
     private Config applicationConfig;
 
     @Autowired
-    public ApolloConfigInit(@Value("${diablo.failback.delay:200}") long diabloFailbackDelay) {
+    public ApolloConfigInit() {
 
-        ConfigTime.setFailbackDelay(diabloFailbackDelay);
+        ConfigTime.setFailbackDelay(1000);
     }
 
     @PostConstruct

@@ -13,15 +13,14 @@ import com.alicp.jetcache.redis.lettuce.RedisLettuceCacheBuilder;
 import com.alicp.jetcache.support.FastjsonKeyConvertor;
 import com.alicp.jetcache.support.JavaValueDecoder;
 import com.alicp.jetcache.support.JavaValueEncoder;
-import com.ctrip.framework.apollo.Config;
-import com.ctrip.framework.apollo.spring.annotation.ApolloConfig;
+import com.ishansong.diablo.config.DiabloConfig;
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ReadFrom;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.masterslave.MasterSlave;
 import io.lettuce.core.masterslave.StatefulRedisMasterSlaveConnection;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,16 +34,16 @@ import java.util.Map;
 @EnableCreateCacheAnnotation
 public class RedisConfiguration {
 
-    @ApolloConfig("ISS.Redis")
-    private Config redisConfig;
+    @Autowired
+    private DiabloConfig diabloConfig;
 
     @Bean
-    public GlobalCacheConfig redisClient(@Value("${redis.sentinel.master.name:}") String master) {
+    public GlobalCacheConfig redisClient( ) {
 
-        String sentinelPrefix = "redis.sentinel." + master;
+        String master=diabloConfig.getAdmin().getRedis().getMaster();
 
-        String nodes = redisConfig.getProperty(sentinelPrefix + ".nodes", "");
-        String password = redisConfig.getProperty(sentinelPrefix + ".pwd", "");
+        String nodes = diabloConfig.getAdmin().getRedis().getNodes();
+        String password = diabloConfig.getAdmin().getRedis().getPwd();
 
         RedisURI redisURI = RedisURI.create("redis-sentinel://" + nodes + "/?sentinelMasterId=" + master);
         redisURI.setPassword(password);
