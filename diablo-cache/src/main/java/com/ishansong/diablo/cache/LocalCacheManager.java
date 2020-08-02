@@ -1,6 +1,6 @@
 package com.ishansong.diablo.cache;
 
-import com.ishansong.diablo.config.DiabloConfig;
+import com.ishansong.diablo.config.web.SyncCacheHttpConfig;
 import com.ishansong.diablo.core.model.dubbo.DubboResourceData;
 import com.ishansong.diablo.core.model.dubbo.DubboResourceStream;
 import com.ishansong.diablo.core.model.plugin.PluginData;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface LocalCacheManager {
 
-    DiabloConfig.SyncCacheHttpConfig httpConfig();
+    SyncCacheHttpConfig httpConfig();
 
     PluginData findPluginByName(String pluginName);
 

@@ -13,4 +13,5 @@ public class Web {
     private AccessLog accessLog;
     private Redis redis;
     private Plugin plugin;
+    private Sync sync;
 }

@@ -2,6 +2,7 @@ package com.ishansong.diablo.cache;
 
 import com.google.common.base.Strings;
 import com.ishansong.diablo.config.DiabloConfig;
+import com.ishansong.diablo.config.web.SyncCacheHttpConfig;
 import com.ishansong.diablo.core.enums.PluginEnum;
 import com.ishansong.diablo.core.model.dubbo.DubboResourceData;
 import com.ishansong.diablo.core.model.dubbo.DubboResourceStream;
@@ -20,9 +21,9 @@ public class HttpLongPollSyncCacheManager extends AbstractLocalCacheManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpLongPollSyncCacheManager.class);
 
-    private DiabloConfig.SyncCacheHttpConfig httpConfig;
+    private SyncCacheHttpConfig httpConfig;
 
-    public HttpLongPollSyncCacheManager(DiabloConfig.SyncCacheHttpConfig httpConfig) {
+    public HttpLongPollSyncCacheManager(SyncCacheHttpConfig httpConfig) {
         this.httpConfig = httpConfig;
     }
 
@@ -145,7 +146,7 @@ public class HttpLongPollSyncCacheManager extends AbstractLocalCacheManager {
     }
 
     @Override
-    public DiabloConfig.SyncCacheHttpConfig httpConfig() {
+    public SyncCacheHttpConfig httpConfig() {
         return this.httpConfig;
     }
 }

@@ -21,9 +21,6 @@ spring:
 diablo:
   sync:
     strategy: http
-  adminSyncUpstream:
-    autoSync: false
-    isSendWarnMesseage: false
   admin:
     syncUpstream:
       autoSync: true

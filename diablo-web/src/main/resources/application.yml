@@ -8,18 +8,7 @@ spring:
     allow-bean-definition-overriding: true
 
 diablo:
-  sync:
-    strategy: http
-    http:
-      url: http://localhost:8887
-  upstream:
-    keepAlive:
-      scanTime: 30000
-  netty:
-    serverBossThreads: 4
-    serverSelectorThreads: 32
-  failback:
-    delay: 1000
+
   web:
     keepAliveUpstream:
       scanTimeMillisecond: 1000
@@ -33,6 +22,9 @@ diablo:
       master: common
       nodes: 192.168.1.10:26379
       pwd: 123
+    sync:
+      strategy: http
+      url: http://localhost:8887
 
 apollo:
   bootstrap:

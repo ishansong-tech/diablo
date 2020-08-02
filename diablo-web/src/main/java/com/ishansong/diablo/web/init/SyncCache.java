@@ -12,7 +12,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.ishansong.diablo.cache.LocalCacheManager;
-import com.ishansong.diablo.config.DiabloConfig;
+import com.ishansong.diablo.config.web.SyncCacheHttpConfig;
 import com.ishansong.diablo.core.constant.HttpConstants;
 import com.ishansong.diablo.core.enums.ConfigGroupEnum;
 import com.ishansong.diablo.core.exception.DiabloException;
@@ -62,7 +62,7 @@ public class SyncCache implements CommandLineRunner, DisposableBean {
 
     private ExecutorService executor;
 
-    private DiabloConfig.SyncCacheHttpConfig httpConfig;
+    private SyncCacheHttpConfig httpConfig;
 
     private List<String> serverList;
 
