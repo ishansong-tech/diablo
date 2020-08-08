@@ -6,22 +6,16 @@ import com.alicp.jetcache.anno.config.EnableCreateCacheAnnotation;
 import com.alicp.jetcache.anno.config.EnableMethodCache;
 import com.alicp.jetcache.anno.support.GlobalCacheConfig;
 import com.alicp.jetcache.anno.support.SpringConfigProvider;
-import com.alicp.jetcache.redis.lettuce.JetCacheCodec;
 import com.alicp.jetcache.redis.lettuce.RedisLettuceCacheBuilder;
 import com.alicp.jetcache.support.FastjsonKeyConvertor;
 import com.alicp.jetcache.support.JavaValueDecoder;
 import com.alicp.jetcache.support.JavaValueEncoder;
-import com.ctrip.framework.apollo.Config;
-import com.ctrip.framework.apollo.spring.annotation.ApolloConfig;
 import com.ishansong.diablo.config.DiabloConfig;
 import io.lettuce.core.ClientOptions;
-import io.lettuce.core.ReadFrom;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
-import io.lettuce.core.masterslave.MasterSlave;
-import io.lettuce.core.masterslave.StatefulRedisMasterSlaveConnection;
+import io.lettuce.core.api.StatefulRedisConnection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -33,26 +27,19 @@ import java.util.Map;
 @EnableCreateCacheAnnotation
 public class RedisConfiguration {
 
-    @ApolloConfig("ISS.Redis")
-    private Config redisConfig;
-
     @Autowired
     private DiabloConfig diabloConfig;
 
     @Bean
     public GlobalCacheConfig redisClient() {
 
-        String master=this.diabloConfig.getWeb().getRedis().getMaster();
-        String nodes = this.diabloConfig.getWeb().getRedis().getNodes();
-        String password = this.diabloConfig.getWeb().getRedis().getPwd();
+        String nodes = diabloConfig.getWeb().getRedis().getNodes();
 
-        RedisURI redisURI = RedisURI.create("redis-sentinel://" + nodes + "/?sentinelMasterId=" + master);
-        redisURI.setPassword(password);
-        RedisClient redisClient = RedisClient.create();
+        RedisURI redisURI = RedisURI.create("redis://"+nodes);
+        RedisClient redisClient = RedisClient.create(redisURI);
         redisClient.setOptions(ClientOptions.builder().disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS).build());
 
-        StatefulRedisMasterSlaveConnection connection = MasterSlave.connect(redisClient, new JetCacheCodec(), redisURI);
-        connection.setReadFrom(ReadFrom.MASTER_PREFERRED);
+        StatefulRedisConnection connection = redisClient.connect();
 
 
         CacheBuilder redisLettuceCacheBuilder = RedisLettuceCacheBuilder.createRedisLettuceCacheBuilder()

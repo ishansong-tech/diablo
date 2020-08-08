@@ -18,6 +18,7 @@ import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ReadFrom;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
+import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.masterslave.MasterSlave;
 import io.lettuce.core.masterslave.StatefulRedisMasterSlaveConnection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ import java.util.Map;
 @AutoConfigureBefore(DataSyncConfiguration.class)
 @EnableMethodCache(basePackages = "com.ishansong.diablo.admin")
 @EnableCreateCacheAnnotation
-public class RedisConfiguration {
+public class CacheConfiguration {
 
     @Autowired
     private DiabloConfig diabloConfig;
@@ -40,18 +41,13 @@ public class RedisConfiguration {
     @Bean
     public GlobalCacheConfig redisClient( ) {
 
-        String master=diabloConfig.getAdmin().getRedis().getMaster();
-
         String nodes = diabloConfig.getAdmin().getRedis().getNodes();
-        String password = diabloConfig.getAdmin().getRedis().getPwd();
 
-        RedisURI redisURI = RedisURI.create("redis-sentinel://" + nodes + "/?sentinelMasterId=" + master);
-        redisURI.setPassword(password);
-        RedisClient redisClient = RedisClient.create();
+        RedisURI redisURI = RedisURI.create("redis://"+nodes);
+        RedisClient redisClient = RedisClient.create(redisURI);
         redisClient.setOptions(ClientOptions.builder().disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS).build());
 
-        StatefulRedisMasterSlaveConnection connection = MasterSlave.connect(redisClient, new JetCacheCodec(), redisURI);
-        connection.setReadFrom(ReadFrom.MASTER_PREFERRED);
+        StatefulRedisConnection connection = redisClient.connect();
 
         CacheBuilder redisLettuceCacheBuilder = RedisLettuceCacheBuilder.createRedisLettuceCacheBuilder()
                                                                         .keyConvertor(FastjsonKeyConvertor.INSTANCE)

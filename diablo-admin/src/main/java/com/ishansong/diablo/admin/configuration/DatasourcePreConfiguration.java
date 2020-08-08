@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 public class DatasourcePreConfiguration {
 
     @Bean(name = "preDatasource")
-    @ConfigurationProperties(prefix = "diablo.gateway.pre")
+    @ConfigurationProperties(prefix = "diablo.admin.db.pre")
     public DataSource preDatasource() {
         return DataSourceBuilder.create().build();
     }

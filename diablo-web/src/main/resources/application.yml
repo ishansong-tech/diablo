@@ -19,19 +19,12 @@ diablo:
       enable: true
       percentagy: 100
     redis:
-      master: common
-      nodes: 192.168.1.10:26379
-      pwd: 123
+      nodes: 127.0.0.1:6379
     sync:
       strategy: http
       url: http://localhost:8887
-
-apollo:
-  bootstrap:
-    enabled: true
-    namespaces: "application"
-  meta: http://192.168.10.56:8080 
-  cacheDir: ../apollo/cache
+    leakDetection:
+      level: SIMPLE
 
 logging:
   level:

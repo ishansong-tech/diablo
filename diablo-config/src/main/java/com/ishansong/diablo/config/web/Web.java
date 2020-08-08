@@ -14,4 +14,5 @@ public class Web {
     private Redis redis;
     private Plugin plugin;
     private Sync sync;
+    private LeakDetection leakDetection;
 }

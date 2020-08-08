@@ -23,7 +23,7 @@ import javax.sql.DataSource;
 public class DatasourceOnlineConfiguration {
 
     @Bean(name = "onlineDatasource")
-    @ConfigurationProperties(prefix = "diablo.gateway.online")
+    @ConfigurationProperties(prefix = "diablo.admin.db.online")
     @Primary
     public DataSource onlineDataSource() {
 

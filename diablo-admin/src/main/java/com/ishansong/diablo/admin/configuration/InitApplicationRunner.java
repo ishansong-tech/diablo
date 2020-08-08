@@ -33,7 +33,7 @@ public class InitApplicationRunner implements ApplicationRunner {
         String apolloCluster=this.diabloConfig.getAdmin().getApollo().getCluster();
         String env=this.diabloConfig.getAdmin().getEnv();
 
-        PreEnv.setPre(!Strings.isNullOrEmpty(apolloCluster));
+        PreEnv.setPre(!Strings.isNullOrEmpty(apolloCluster) && Objects.equal("pre",apolloCluster));
         ProdEnv.setProd(!Strings.isNullOrEmpty(env) && Objects.equal("pro",env.toLowerCase()));
     }
 

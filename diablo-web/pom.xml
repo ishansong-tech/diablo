@@ -16,11 +16,6 @@
   <dependencies>
 
     <dependency>
-      <groupId>com.ctrip.framework.apollo</groupId>
-      <artifactId>apollo-client</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>com.ishansong</groupId>
       <artifactId>diablo-core</artifactId>
     </dependency>
@@ -33,12 +28,6 @@
     <dependency>
       <groupId>com.ishansong</groupId>
       <artifactId>diablo-plugin</artifactId>
-      <exclusions>
-        <exclusion>
-          <artifactId>apollo-core</artifactId>
-          <groupId>com.ctrip.framework.apollo</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>

@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
-@DependsOn({"apolloConfigInit"})
+@DependsOn({"webResourceConfigInit"})
 @Component
 public class FailbackReporter {
 

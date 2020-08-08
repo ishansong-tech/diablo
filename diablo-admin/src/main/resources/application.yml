@@ -8,12 +8,12 @@ spring:
   application:
     name: diablo-admin
   resources:
-    static-locations: classpath:/static/
+    static-locations: classpath:/prestatic/
   thymeleaf:
     cache: true
     encoding: utf-8
     enabled: true
-    prefix: classpath:/static/
+    prefix: classpath:/prestatic/
     suffix: .html
   main:
     allow-bean-definition-overriding: true
@@ -30,18 +30,20 @@ diablo:
     env: DS
     domain: http://127.0.0.1:8887
     zookeeper:
-      host: 192.168.1.1:2181
+      host: 127.0.0.1:2181
     redis:
-      master: common
-      nodes: 192.168.1.10:26379
-      pwd: 123
-
-apollo:
-  bootstrap:
-    enabled: true
-    namespaces: application,ISS.MachineConfig,ISS.DBConfig
-  meta: http://192.168.10.56:8080 
-  cacheDir: ../apollo/cache
+      nodes: 127.0.0.1:6379
+    db:
+      online:
+        username: root
+        password: 123456
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/diablo_pre?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=CONVERT_TO_NULL&failOverReadOnly=false&autoReconnect=true&serverTimezone=GMT%2B8
+      pre:
+        username: root
+        password: 123456
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/diablo?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=CONVERT_TO_NULL&failOverReadOnly=false&autoReconnect=true&serverTimezone=GMT%2B8
 env: DS
 
 # pre数据库连接差异 通过apollo.cluster指定  -Dapollo.cluster=pre
