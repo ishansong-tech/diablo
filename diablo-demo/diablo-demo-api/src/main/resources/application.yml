@@ -1,0 +1,16 @@
+server:
+  port: 8898
+
+spring:
+  application:
+    name: diablo-demo-api
+
+app:
+  id: diablo-demo-api
+
+logging:
+  level:
+    root: info
+
+
+

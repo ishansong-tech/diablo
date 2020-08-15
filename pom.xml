@@ -22,6 +22,7 @@
         <module>diablo-cache</module>
         <module>diablo-web</module>
         <module>diablo-admin</module>
+        <module>diablo-demo</module>
     </modules>
 
     <properties>
