@@ -112,10 +112,6 @@ public final class DiabloWebHandler implements WebHandler {
 
                     log.error("DiabloWebHandler.handle, uri: {} doOnError:{}", exchange.getRequest().getURI().getPath(), trace);
                 });
-//                .doFinally(f -> {
-//                    // 后续有时间确认 没有清除掉
-//                    IssRpcContext.clean();
-//                });
     }
 
     private static class DefaultDiabloPluginChain implements DiabloPluginChain {
